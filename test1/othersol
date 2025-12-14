@@ -1,0 +1,123 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ~0.8;
+
+
+// 反转字符
+contract Other {
+    function reverseString(string memory str) public pure returns (string memory) {
+        bytes memory strBytes = bytes(str);
+        uint256 length = strBytes.length;
+        bytes memory reversed = new bytes(length);
+        
+        for (uint256 i = 0; i < length; i++) {
+            reversed[i] = strBytes[length - 1 - i];
+        }
+        
+        return string(reversed);
+    }
+    /*
+            i=0: reversed[0] = strBytes[4] = 'e'
+            i=1: reversed[1] = strBytes[3] = 'd'
+            i=2: reversed[2] = strBytes[2] = 'c'
+            i=3: reversed[3] = strBytes[1] = 'b'
+            i=4: reversed[4] = strBytes[0] = 'a'
+        */
+}
+
+
+// 整数转罗马数字
+contract RomanConverter {
+
+    mapping (bytes1 => uint) romanToInts;
+    mapping (uint => bytes1) romans;
+    constructor (){
+        romanToInts['I'] = 1;
+        romanToInts['V'] = 5;
+        romanToInts['X'] = 10;
+        romanToInts['L'] = 50;
+        romanToInts['C'] = 100;
+        romanToInts['D'] = 500;
+        romanToInts['M'] = 1000;
+        romans[1] = 'I';
+        romans[5] = 'V';
+        romans[10] = 'X';
+        romans[50] = 'L';
+        romans[100] = 'C';
+        romans[500] = 'D';
+        romans[1000] = 'M';
+    }
+    //整数转罗马数字
+    function intToRoman(uint256 num) public pure returns (string memory) {
+        uint256[13] memory values = [uint256(1000), 900, 500, 400, 100, 
+        90, 50, 40, 10, 9, 5, 4, 1];
+        string[13] memory symbols = ["M", "CM", "D", "CD", "C", "XC",
+         "L", "XL", "X", "IX", "V", "IV", "I"];
+        
+        
+        
+        string memory result = "";
+        
+        for (uint256 i = 0; i < 13; i++) {
+            while (num >= values[i]) {
+                result = string(abi.encodePacked(result, symbols[i]));
+                num -= values[i];
+            }
+        }
+        return result;
+    }
+
+    // 罗马数字转整数
+    function  romanToInt(string memory s) public view  returns  (int) {
+        bytes memory str = bytes(s);
+        uint256 len = str.length;
+        int ans = 0;
+        for (uint i= 0 ;i< len; i++){
+            uint value  =  romanToInts[str[i]];
+            if (i < len -1 && value < romanToInts[str[i +1]]){
+                    ans -= int(value);
+            }else{
+                ans += int(value);
+            }
+        }
+        return  ans;
+
+    }
+}
+
+// 合并两个数组
+contract Merge {
+     function mergeArray(uint[] calldata arr1,uint[] calldata arr2) public pure returns(uint[] memory){
+           uint len1 =arr1.length;
+           uint len2 =arr2.length;
+           uint[] memory arr = new uint[](len1+len2);
+           uint i=0;
+           uint j=0;
+           uint k=0;
+           while (i < len1 && j < len2){
+            arr[k++] = arr1[i] <= arr2[j]? arr1[i++]:arr2[j++];
+           }
+           while (i<len1) arr[k++] =arr1[i++];
+           while (j<len2) arr[k++] =arr2[j++];
+           return arr;
+    }
+
+    //在一个有序数组中查找目标值。
+    function binarySearch(uint[] calldata arr,uint target) public  pure  returns (int){
+            uint len =arr.length;
+            uint left = 0;
+            uint right = len-1;
+            while (left <= right){
+                uint mid = left + (right - left)/2 ;
+                if (arr[mid] == target) {
+                    return int(mid);
+                } else if (arr[mid] < target) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+            return -1;
+    }
+}
+
+
